@@ -1,10 +1,13 @@
 #!python
+# -*- coding: utf-8 -*-
 # -*- mode: python; Encoding: utf-8; coding: utf-8 -*-
-# Last updated: <2019/05/20 12:19:17 +0900>
+# Last updated: <2019/05/21 08:35:49 +0900>
 """
 Convert SP-5030/S-BASIC/Hu-BASIC program to text.
 
-Windows10 1809 x64 + Python 2.7.16 32bit
+* Windows10 1809 x64 + Python 2.7.16 32bit
+
+Ver 1.1 fix : Fix error when redirect.
 """
 
 import struct
@@ -615,63 +618,63 @@ ctrl_dic_hubasic = {
 }
 
 # japanese character. kanji.
-kanji_dic = u"日月火水木金土生年時分秒円￥￡"
+kanji_dic = u'日月火水木金土生年時分秒円￥￡'
 
 # japanese character. kana.
-kana_dic = u"。「」、．ヲァィゥェォャュョッ"
-kana_dic += u"ーアイウエオカキクケコサシスセソ"
-kana_dic += u"タチツテトナニヌネノハヒフヘホマ"
-kana_dic += u"ミムメモヤユヨラリルレロワン゛゜"
+kana_dic = u'。「」、．ヲァィゥェォャュョッ'
+kana_dic += u'ーアイウエオカキクケコサシスセソ'
+kana_dic += u'タチツテトナニヌネノハヒフヘホマ'
+kana_dic += u'ミムメモヤユヨラリルレロワン゛゜'
 
 # japanese character. graphic.
 graph_dic = {
-    0x5E: u"↑",  # up arrow
-    0x5F: u"←",  # left arrow
-    0x60: "{ufo}",
-    0x63: "{human}",
-    0x67: "{smileblack}",
-    0x68: "{smilewhite}",
-    0x69: "{snake}",
-    0x80: u"↓",  # down arrow
-    0xC0: u"→",  # right arrow
-    # 0xC2: u"▄",
-    0xC4: u"_",
-    # 0xC5: u"▏",
-    # 0xC6: u"▒",  # fill block half tone
-    0xC8: u"■",  # fill block
-    # 0xC9: u"◤",
-    0xCB: u"├",
-    # 0xCC: u"◘",
-    0xCD: u"└",
-    0xCE: u"┐",
-    # 0xCF: u"▂",
-    0xD0: u"┌",
-    0xD1: u"┴",
-    0xD2: u"┬",
-    0xD3: u"┤",
-    # 0xD4: u"▎",
-    # 0xD5: u"▌",
-    # 0xD8: u"▀",
-    # 0xD9: u"▃",
-    0xDD: u"┘",
-    # 0xDE: u"▞",
-    # 0xDF: u"▚",
-    0xE0: u"─",
-    0xE1: "{spade}",
-    # 0xE9: u"◣",
-    0xED: u"＼",
-    0xEE: u"／",
-    0xF1: u"●",
-    0xF3: "{heart}",
-    # 0xF5: u"◢",
-    0xF6: u"×",
-    0xF7: u"○",
-    0xF8: "{club}",
-    0xFA: u"◆",  # diamond
-    0xFB: u"┼",
-    0xFD: u"│",
-    # 0xFE: u"◥",
-    0xFF: u"π",
+    0x5E: u'↑',  # up arrow
+    0x5F: u'←',  # left arrow
+    0x60: '{ufo}',
+    0x63: '{human}',
+    0x67: '{smileblack}',
+    0x68: '{smilewhite}',
+    0x69: '{snake}',
+    0x80: u'↓',  # down arrow
+    0xC0: u'→',  # right arrow
+    # 0xC2: u'▄',
+    0xC4: u'_',
+    # 0xC5: u'▏',
+    # 0xC6: u'▒',  # fill block half tone
+    0xC8: u'■',  # fill block
+    # 0xC9: u'◤',
+    0xCB: u'├',
+    # 0xCC: u'◘',
+    0xCD: u'└',
+    0xCE: u'┐',
+    # 0xCF: u'▂',
+    0xD0: u'┌',
+    0xD1: u'┴',
+    0xD2: u'┬',
+    0xD3: u'┤',
+    # 0xD4: u'▎',
+    # 0xD5: u'▌',
+    # 0xD8: u'▀',
+    # 0xD9: u'▃',
+    0xDD: u'┘',
+    # 0xDE: u'▞',
+    # 0xDF: u'▚',
+    0xE0: u'─',
+    0xE1: '{spade}',
+    # 0xE9: u'◣',
+    0xED: u'＼',
+    0xEE: u'／',
+    0xF1: u'●',
+    0xF3: '{heart}',
+    # 0xF5: u'◢',
+    0xF6: u'×',
+    0xF7: u'○',
+    0xF8: '{club}',
+    0xFA: u'◆',  # diamond
+    0xFB: u'┼',
+    0xFD: u'│',
+    # 0xFE: u'◥',
+    0xFF: u'π',
 }
 
 
@@ -967,7 +970,12 @@ def dump_source(buf, id):
         elif id == ID_HUBASIC:
             lstr = get_line_hubasic(line, 4, line_end_code)
 
-        print("%d %s" % (line_number, lstr))
+        if jp_flag:
+            # print("%d %s" % (line_number, lstr.encode('utf-8')))
+            print("%d %s" % (line_number, lstr.encode('cp932')))
+        else:
+            print("%d %s" % (line_number, lstr))
+
         p += line_length
 
     return 0
@@ -987,7 +995,7 @@ def main():
     # get command line oprion
     p = argparse.ArgumentParser()
     p.description = "Convert BASIC program in MZT file to text."
-    p.add_argument("--version", action='version', version="%(prog)s 1.0")
+    p.add_argument("--version", action='version', version="%(prog)s 1.1")
     p.add_argument("infile", metavar='INFILE', help=".mzt file")
     p.add_argument("--target", choices=target_list.keys(),
                    help="target BASIC. SP-5030, S-BASIC, Hu-BASIC")
