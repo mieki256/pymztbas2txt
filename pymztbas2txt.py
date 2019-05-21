@@ -1,13 +1,16 @@
 #!python
 # -*- coding: utf-8 -*-
 # -*- mode: python; Encoding: utf-8; coding: utf-8 -*-
-# Last updated: <2019/05/21 08:35:49 +0900>
+# Last updated: <2019/05/21 09:02:49 +0900>
 """
 Convert SP-5030/S-BASIC/Hu-BASIC program to text.
 
 * Windows10 1809 x64 + Python 2.7.16 32bit
+* Author : mieki256
+* License : CC0 / Public Domain
 
-Ver 1.1 fix : Fix error when redirect.
+Ver. 1.1 fix : Fix error when redirect.
+Ver. 1.0 first commit.
 """
 
 import struct
